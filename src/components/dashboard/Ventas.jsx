@@ -1,4 +1,5 @@
-import React, { useState, useEffect  } from 'react';
+import React, { useState, useEffect, useContext  } from 'react';
+import { AuthContext } from "../../AuthContext";
 import api from "../../axiosConfig";
 import { MdPrint } from "react-icons/md";
 import "./../../styles.css";
@@ -16,6 +17,7 @@ const [precioVariable, setPrecioVariable] = useState("");
   const [formasPago, setFormasPago] = useState([]);
   const [formaPago, setFormaPago] = useState(1); // por defecto efectivo
   const [historial, setHistorial] = useState([]);
+  const { userId } = useContext(AuthContext);
 
 // Función para abrir el modal desde tu agregarProducto
 const abrirModalVariable = (producto) => {
@@ -180,10 +182,13 @@ const imprimirTicket = (id) => {
     if (entrega < total) return alert("Entrega insuficiente");
 
     try {
+      console.log("ID del usuario:", userId);
       await api.post("/Ventas", {
+        
         total,
         formaPago,
         comentario,
+        VendedorId: userId,
         items: carrito.map(c => ({
           productoId: c.id,
           cantidad: c.cantidad
