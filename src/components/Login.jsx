@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from './../AuthContext';
+import { AuthContext } from '../AuthContext';
+import logo2 from './../logo2.svg';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -31,7 +32,7 @@ export default function Login() {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <img src="/logo.png" alt="Logo" style={styles.logo} />
+        <img src={logo2} alt="Logo" style={styles.logo} />
         <h2>Iniciar sesión</h2>
         <form onSubmit={handleSubmit} style={styles.form}>
           <input type="text" placeholder="Usuario" value={username} onChange={e => setUsername(e.target.value)} style={styles.input} required />
@@ -45,10 +46,10 @@ export default function Login() {
 
 // estilos inline (igual que antes)
 const styles = {
-  container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#f0f2f5' },
+  container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#f5f0f0ff' },
   card: { width: 350, padding: 30, borderRadius: 10, boxShadow: '0 4px 15px rgba(0,0,0,0.2)', background: '#fff', textAlign: 'center' },
-  logo: { width: 100, marginBottom: 20 },
+  logo: { width: 200, },
   form: { display: 'flex', flexDirection: 'column' },
-  input: { marginBottom: 15, padding: 10, borderRadius: 5, border: '1px solid #ccc', fontSize: 16 },
-  button: { padding: 10, borderRadius: 5, border: 'none', background: '#007bff', color: '#fff', fontSize: 16, cursor: 'pointer' },
+  input: { marginBottom: 15, padding: 10, borderRadius: 5, border: '1px solid #ccc', fontSize: 16, "background-color": '#fff8d3ff' },
+  button: { padding: 10, borderRadius: 5, border: 'none', background: '#ff0000ff', color: '#fff', fontSize: 16, cursor: 'pointer' },
 };

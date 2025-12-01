@@ -7,11 +7,46 @@ export default function Ventas() {
   const [codigoBarra, setCodigo] = useState('');
   const [carrito, setCarrito] = useState([]);
   const [entrega, setEntrega] = useState(0);
+  const [mostrarModalVariable, setMostrarModalVariable] = useState(false);
+const [productoVariableSeleccionado, setProductoVariableSeleccionado] = useState(null);
+const [cantidadVariable, setCantidadVariable] = useState("");
+const [precioVariable, setPrecioVariable] = useState("");
   const [comentario, setComentario] = useState('');
   const [resultados, setResultados] = useState([]);
   const [formasPago, setFormasPago] = useState([]);
   const [formaPago, setFormaPago] = useState(1); // por defecto efectivo
   const [historial, setHistorial] = useState([]);
+
+// Función para abrir el modal desde tu agregarProducto
+const abrirModalVariable = (producto) => {
+  setProductoVariableSeleccionado(producto);
+  setCantidadVariable(1);        // valor inicial de cantidad
+  setPrecioVariable(producto.precio); // valor inicial del precio vigente
+  setMostrarModalVariable(true);
+};
+
+// Función para confirmar y agregar al carrito
+const confirmarVariable = () => {
+  if (!cantidadVariable || !precioVariable) return alert("Ingrese cantidad y precio");
+
+  setCarrito(prev => {
+    const existe = prev.find(p => p.id === productoVariableSeleccionado.id);
+    if (existe) {
+      return prev.map(p =>
+        p.id === productoVariableSeleccionado.id
+          ? { ...p, cantidad: p.cantidad + parseFloat(cantidadVariable), precio: parseFloat(precioVariable) }
+          : p
+      );
+    }
+    return [...prev, { ...productoVariableSeleccionado, cantidad: parseFloat(cantidadVariable), precio: parseFloat(precioVariable) }];
+  });
+
+  // Reset modal
+  setMostrarModalVariable(false);
+  setProductoVariableSeleccionado(null);
+  setCantidadVariable("");
+  setPrecioVariable("");
+};
 
 const cargarHistorial = async () => {
   const r = await api.get("/Ventas/Historial");
@@ -48,26 +83,50 @@ const imprimirTicket = (id) => {
     }
   };
 
-  // ➕ Agregar producto al carrito
-  const agregarProducto = (p) => {
-    if (!p || !p.precio) {
-      alert("El producto no tiene precio vigente");
-      return;
+ const agregarProducto = (p) => {
+  if (!p || !p.precio) {
+    alert("El producto no tiene precio vigente");
+    return;
+  }
+
+  // Si el producto es variable
+  if (p.precioVariable) {
+    setProductoVariableSeleccionado(p);
+    setMostrarModalVariable(true);
+    return;
+  }
+
+  const confirmarVariable = () => {
+  setCarrito(prev => [
+    ...prev,
+    {
+      ...productoVariableSeleccionado,
+      cantidad: parseFloat(cantidadVariable),
+      precio: parseFloat(precioVariable)
     }
+  ]);
 
-    setCarrito(prev => {
-      const existe = prev.find(x => x.id === p.id);
-      if (existe) {
-        return prev.map(x =>
-          x.id === p.id ? { ...x, cantidad: x.cantidad + 1 } : x
-        );
-      }
-      return [...prev, { ...p, cantidad: 1 }];
-    });
+  setMostrarModalVariable(false);
+  setCantidadVariable("");
+  setPrecioVariable("");
+  setCodigo("");
+  setResultados([]);
+};
 
-    setCodigo('');
-    setResultados([]);
-  };
+  // Producto normal: cantidad +1
+  setCarrito(prev => {
+    const existe = prev.find(x => x.id === p.id);
+    if (existe) {
+      return prev.map(x =>
+        x.id === p.id ? { ...x, cantidad: x.cantidad + 1 } : x
+      );
+    }
+    return [...prev, { ...p, cantidad: 1 }];
+  });
+
+  setCodigo('');
+  setResultados([]);
+};
 
   // Total y cambio
   const total = carrito.reduce((acc, p) => acc + p.precio * p.cantidad, 0);
@@ -75,21 +134,28 @@ const imprimirTicket = (id) => {
 
   // ⌨ Submit: intenta cargar producto exacto por código
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    if (!codigoBarra.trim()) return;
+  if (!codigoBarra.trim()) return;
 
-    try {
-      const resp = await api.get(`/productos/codigo/${codigoBarra}`);
-      if (resp.data) {
-        agregarProducto(resp.data);
-        return;
-      }
-    } catch { }
+  try {
+    const resp = await api.get(`/productos/codigo/${codigoBarra}`);
+    if (resp.data) {
+      agregarProducto(resp.data);
+      return;
+    }
+  } catch (err) {
+    if (err.response && err.response.status === 404) {
+      alert("Código inexistente");
+      setCodigo('');
+      return;
+    }
+    console.error(err);
+  }
 
-    // Si no existe por código → mostrar sugerencias
-    buscarProducto(codigoBarra);
-  };
+  // Si no existe por código → mostrar sugerencias
+  buscarProducto(codigoBarra);
+};
 
 
   // Cargar enum del backend
@@ -159,7 +225,13 @@ const colgroupH = (
   </colgroup>
 );
 
+
+
+
   return (
+
+
+    
     <div style={{ display: 'flex', height: '96vh', gap: 20, padding: 8 }}>
 
       {/* CARRITO */}
@@ -396,6 +468,81 @@ const colgroupH = (
 
         
       </div>
+      {mostrarModalVariable && (
+  <div
+    style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background: "rgba(0,0,0,0.5)",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      zIndex: 1000
+    }}
+  >
+    <div
+      style={{
+        background: "#fff",
+        padding: 20,
+        borderRadius: 10,
+        width: 300,
+        boxShadow: "0 4px 10px rgba(0,0,0,0.2)",
+        display: "flex",
+        flexDirection: "column",
+        gap: 10
+      }}
+    >
+      <h3>{productoVariableSeleccionado?.nombre}</h3>
+
+      <label>
+        Cantidad:
+        <input
+          type="number"
+          min="0.01"
+          step="0.01"
+          value={cantidadVariable}
+          onChange={e => setCantidadVariable(e.target.value)}
+          style={{ width: "100%", padding: 5, marginTop: 5 }}
+        />
+      </label>
+
+      <label>
+        Precio unitario:
+        <input
+          type="number"
+          min="0"
+          step="0.01"
+          value={precioVariable}
+          onChange={e => setPrecioVariable(e.target.value)}
+          style={{ width: "100%", padding: 5, marginTop: 5 }}
+        />
+      </label>
+
+      <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10 }}>
+        <button
+          onClick={() => {
+            setMostrarModalVariable(false);
+            setCantidadVariable("");
+            setPrecioVariable("");
+          }}
+          style={{ padding: 10, borderRadius: 5, border: "none", background: "#ccc", cursor: "pointer" }}
+        >
+          Cancelar
+        </button>
+
+        <button
+          onClick={confirmarVariable}
+          style={{ padding: 10, borderRadius: 5, border: "none", background: "#28a745", color: "#fff", cursor: "pointer" }}
+        >
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }

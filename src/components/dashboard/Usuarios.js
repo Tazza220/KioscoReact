@@ -166,7 +166,7 @@ const styles = {
   button: {
     padding: "10px 18px",
     borderRadius: 5,
-    background: "#003bbf",
+    background: "#ff0000ff",
     color: "#fff",
     border: "none",
     cursor: "pointer",
@@ -178,7 +178,7 @@ const styles = {
   },
 
   headerRow: {
-    background: "#003bbf",
+    background: "#502c2cff",
     color: "#fff",
   },
 
@@ -216,6 +216,6 @@ const styles = {
     borderRadius: 4,
     border: "none",
     cursor: "pointer",
-    background: "#e0e0e0",
+    background: "#ff0000ff",
   },
 };

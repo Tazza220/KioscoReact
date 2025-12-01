@@ -90,9 +90,9 @@ export default function DashboardProveedores() {
         <table style={styles.table}>
           <thead style={styles.thead}>
             <tr>
-              <th>Nombre</th>
-              <th>CUIT</th>
-              <th>Contacto</th>
+              <th style={{ ...styles.th, ... styles.thFirst}}>Nombre</th>
+              <th style={{ ...styles.th}}>CUIT</th>
+              <th style={{ ...styles.th, ... styles.thLast}}>Contacto</th>
             </tr>
           </thead>
           <tbody>
@@ -112,16 +112,26 @@ export default function DashboardProveedores() {
 
 const styles = {
   input: { padding: 8, borderRadius: 5, border: '1px solid #ccc', flex: 1 },
-  button: { padding: 10, borderRadius: 5, border: 'none', background: '#003bbf', color: '#fff', cursor: 'pointer' },
+  button: { padding: 10, borderRadius: 5, border: 'none', background: '#ff0000ff', color: '#fff', cursor: 'pointer' },
   table: { width: "100%", borderCollapse: "collapse", minWidth: "500px" },
   thead: { 
-    textAlign: "left", 
-    background: "#003bbf", 
+    "text-align": "left", 
+    top: 0, 
+    background: "#502c2cff", 
     color: "#fff", 
     fontWeight: "bold", 
-    boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-    borderTopLeftRadius: "12px",
-    borderTopRightRadius: "12px",
+    boxShadow: "0 2px 5px rgba(0,0,0,0.1)" 
+  },th: {
+    padding: "12px 16px", // más espacio entre texto y borde
+    textAlign: "left",
+  },
+  thFirst: {
+    borderTopLeftRadius: "8px",
+    borderBottomLeftRadius:"8px",
+  },
+  thLast: {
+    borderTopRightRadius: "8px",
+    borderBottomRightRadius: "8px",
   },
   rowEven: { background: "#f9f9f9", transition: "background 0.2s" },
   rowOdd: { background: "#fff", transition: "background 0.2s" },

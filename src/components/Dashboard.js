@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Ventas from './dashboard/Ventas';
-import Productos from './dashboard/Productos';
 import DashboardProductos from './dashboard/DashboardProductos';
 import Proveedores from './dashboard/Proveedores';
 import Usuarios from './dashboard/Usuarios';
@@ -23,7 +22,7 @@ export default function Dashboard() {
             element={
               role === 'Operator' ? <Navigate to="ventas" /> :
               role === 'Manager' ? <Navigate to="ventas" /> :
-              role === 'SuperUser' ? <Navigate to="usuarios" /> :
+              role === 'SuperUser' ? <Navigate to="ventas" /> :
               <div>No autorizado</div>
             }
           />

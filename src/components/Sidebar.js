@@ -10,7 +10,7 @@ export default function Sidebar({ role }) {
   if (role === 'SuperUser') options = ['ventas', 'productos', 'proveedores', 'reportes', 'usuarios'];
 
   return (
-    <div style={{ width: 200, background: '#2c3e50', color: '#ecf0f1', padding: 20 }}>
+    <div style={{ width: 100, background: '#502c2cff', color: '#ecf0f1', padding: 20 }}>
       <h3>Menú</h3>
       {options.map(opt => (
         <div

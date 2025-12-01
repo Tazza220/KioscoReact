@@ -7,6 +7,7 @@ export default function DashboardProductos({ alertaPrecioBajo = true }) {
   const [codigo, setCodigo] = useState("");
   const [precio, setPrecio] = useState("");
   const [busqueda, setBusqueda] = useState("");
+const [precioVariable, setPrecioVariable] = useState(false);
 
   // Cargar productos con precio vigente
   const fetchProductos = async () => {
@@ -78,7 +79,8 @@ export default function DashboardProductos({ alertaPrecioBajo = true }) {
         // Crear producto
         const productoNuevo = await api.post("/productos", {
           nombre,
-          codigoBarra: codigo
+          codigoBarra: codigo,
+          precioVariable
         });
 
         // Crear primer precio
@@ -171,6 +173,15 @@ export default function DashboardProductos({ alertaPrecioBajo = true }) {
         required
         step="0.01"
       />
+      {/* ✅ Checkbox precio variable */}
+  <label style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+    <input
+      type="checkbox"
+      checked={precioVariable}
+      onChange={(e) => setPrecioVariable(e.target.checked)}
+    />
+    Precio variable
+  </label>
       <button style={styles.button} type="submit">Agregar</button>
     </form>
     <div>{/* Buscador */}
@@ -223,13 +234,13 @@ export default function DashboardProductos({ alertaPrecioBajo = true }) {
 
 const styles = {
   input: { padding: 8, borderRadius: 5, border: '1px solid #ccc', flex: 1 },
-  button: { padding: 10, borderRadius: 5, border: 'none', background: '#003bbf', color: '#fff', cursor: 'pointer' },
-  buttonSmall: { padding: "6px 10px", borderRadius: 5, border: 'none', background: '#003bbf', color: '#fff', cursor: 'pointer' },
+  button: { padding: 10, borderRadius: 5, border: 'none', background: '#ff0000ff', color: '#fff', cursor: 'pointer' },
+  buttonSmall: { padding: "6px 10px", borderRadius: 5, border: 'none', background: '#ff0000ff', color: '#fff', cursor: 'pointer' },
   table: { width: "100%", borderCollapse: "collapse", minWidth: "600px" },
   thead: { 
     "text-align": "left", 
     top: 0, 
-    background: "#2c3e50", 
+    background: "#502c2cff", 
     color: "#fff", 
     fontWeight: "bold", 
     boxShadow: "0 2px 5px rgba(0,0,0,0.1)" 
