@@ -1,7 +1,14 @@
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: "https://localhost:7014/api", // cambia al puerto de tu API
-});
+// Por defecto
+let baseURL = "https://localhost:7014/api";
+
+// Si estás en otra PC, cambia el puerto o host
+if (window.location.hostname === "EL22-PC01") {
+  baseURL = "https://localhost:5000/api";
+}
+
+// Crear instancia de axios
+const api = axios.create({ baseURL });
 
 export default api;
