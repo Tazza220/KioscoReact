@@ -62,7 +62,7 @@ const styles = {
   card: { width: 350, padding: 30, borderRadius: 10, boxShadow: "0 4px 15px rgba(0,0,0,0.2)", background: "#fff", textAlign: "center" },
   form: { display: "flex", flexDirection: "column" },
   input: { marginBottom: 15, padding: 10, borderRadius: 5, border: "1px solid #ccc", fontSize: 16 },
-  button: { padding: 10, borderRadius: 5, border: "none", background: "#a72828ff", color: "#fff", fontSize: 16, cursor: "pointer" },
+  button: { padding: 10, borderRadius: 5, border: "none", background: "#ff0000ff", color: "#fff", fontSize: 16, cursor: "pointer" },
 };
 
 export default Register;
