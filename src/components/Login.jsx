@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from "../axiosConfig";
 import { AuthContext } from '../AuthContext';
 import logo2 from './../logo2.svg';
+import { Link } from 'react-router-dom';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -39,6 +40,9 @@ export default function Login() {
           <input type="text" placeholder="Usuario" value={username} onChange={e => setUsername(e.target.value)} style={styles.input} required />
           <input type="password" placeholder="Contraseña" value={password} onChange={e => setPassword(e.target.value)} style={styles.input} required />
           <button type="submit" style={styles.button}>Ingresar</button>
+          <p style={{ marginTop: 15 }}>
+    ¿No tenés cuenta? <Link to="/register">Registrate aquí</Link>
+  </p>
         </form>
       </div>
     </div>
