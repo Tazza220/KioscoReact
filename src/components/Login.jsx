@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import api from "../axiosConfig";
 import { AuthContext } from '../AuthContext';
 import logo2 from './../logo2.svg';
 
@@ -10,24 +11,24 @@ export default function Login() {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    const res = await fetch('https://localhost:7014/api/Auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
+  try {
+    const { data } = await api.post("/Auth/login", {
+      username,
+      password
     });
 
-    const data = await res.json();
-
-    if (res.ok) {
-      setToken(data.token);
-      setRole(data.role); // el backend debe enviar el rol en la respuesta
-      navigate('/dashboard');
-    } else {
-      alert(data.message || 'Error en login');
-    }
-  };
+    // Si la respuesta es exitosa
+    setToken(data.token);
+    setRole(data.role); // el backend debe enviar el rol
+    navigate('/dashboard');
+    
+  } catch (err) {
+    // Manejo de errores
+    alert(err.response?.data?.message || 'Error en login');
+  }
+};
 
   return (
     <div style={styles.container}>
