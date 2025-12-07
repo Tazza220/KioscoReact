@@ -16,7 +16,7 @@ export default function Dashboard() {
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <Sidebar role={role} />
-      <div style={{ flex: 1, padding:5, background: '#ecf0f1' }}>
+      <div style={{ flex: 1, padding:5, background: '#bcbfc0ff' }}>
         <Routes>
           {/* Redirección automática al primer menú permitido según rol */}
           <Route

@@ -158,20 +158,20 @@ const [precioVariable, setPrecioVariable] = useState(false);
       />
       <input
         style={styles.input}
-        type="text"
-        placeholder="Código de barras"
-        value={codigo}
-        onChange={(e) => setCodigo(e.target.value)}
-        required
-      />
-      <input
-        style={styles.input}
         type="number"
         placeholder="Precio inicial"
         value={precio}
         onChange={(e) => setPrecio(e.target.value)}
         required
         step="0.01"
+      />
+      <input
+        style={styles.input}
+        type="text"
+        placeholder="Código de barras"
+        value={codigo}
+        onChange={(e) => setCodigo(e.target.value)}
+        required
       />
       {/* ✅ Checkbox precio variable */}
   <label style={{ display: "flex", alignItems: "center", gap: "5px" }}>
