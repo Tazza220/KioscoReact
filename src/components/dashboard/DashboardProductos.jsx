@@ -157,7 +157,7 @@ const [precioVariable, setPrecioVariable] = useState(false);
         required
       />
       <input
-        style={styles.input}
+        style={{...styles.input, maxWidth:"100px"}}
         type="number"
         placeholder="Precio inicial"
         value={precio}
@@ -166,7 +166,7 @@ const [precioVariable, setPrecioVariable] = useState(false);
         step="0.01"
       />
       <input
-        style={styles.input}
+        style={{...styles.input, maxWidth:"120px"}}
         type="text"
         placeholder="Código de barras"
         value={codigo}

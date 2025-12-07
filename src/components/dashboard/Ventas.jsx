@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext  } from 'react';
 import { AuthContext } from "../../AuthContext";
 import api from "../../axiosConfig";
 import { MdPrint } from "react-icons/md";
+import { FaDeleteLeft } from "react-icons/fa6";
 import "./../../styles.css";
 
 export default function Ventas() {
@@ -229,9 +230,19 @@ const colgroupH = (
     <col style={{ width: "8%" }} />
   </colgroup>
 );
+const eliminarProducto = (id) => {
+  setCarrito(prev => prev.filter(p => p.id !== id));
+};
 
-
-
+const cambiarCantidad = (id, nuevaCantidad) => {
+  setCarrito(prev =>
+    prev.map(p =>
+      p.id === id
+        ? { ...p, cantidad: Number(nuevaCantidad) }
+        : p
+    )
+  );
+};
 
   return (
 
@@ -255,6 +266,7 @@ const colgroupH = (
                 <th style={styles.th}>Cant</th>
                 <th style={styles.th}>Precio</th>
                 <th style={styles.th}>Subtotal</th>
+                <th></th>
               </tr>
             </thead>
             </table>
@@ -272,9 +284,22 @@ const colgroupH = (
               {carrito.map(p => (
                 <tr key={p.id}>
                   <td style={styles.td}>{p.nombre}</td>
-                  <td style={styles.td}>{p.cantidad}</td>
+                  <td style={styles.td}><input
+  style={styles.inputCantidad}
+  type="number"
+  value={p.cantidad}
+  min="1"
+  step="1"
+  onChange={e => cambiarCantidad(p.id, e.target.value)}
+/></td>
                   <td style={styles.td}>${p.precio}</td>
                   <td style={styles.td}>${p.precio * p.cantidad}</td>
+                  <td><button
+    style={styles.btnDelete}
+    onClick={() => eliminarProducto(p.id)}
+  >
+    <FaDeleteLeft />
+  </button></td>
                 </tr>
               ))}
             </tbody>
@@ -573,6 +598,12 @@ const option = {
 };
 
 const styles = {
+  btnDelete:{color:"#fff",
+    padding:"5px 5px 2px 5px",
+  },
+  inputCantidad:{
+    width:"100%"
+  },
   input: {
     padding: 10,
     marginBottom: 10,
