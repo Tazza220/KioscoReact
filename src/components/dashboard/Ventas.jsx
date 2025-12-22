@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext  } from 'react';
+import React, { useState, useEffect, useContext, useRef  } from 'react';
 import { AuthContext } from "../../AuthContext";
 import api from "../../axiosConfig";
 import { MdPrint } from "react-icons/md";
@@ -11,7 +11,7 @@ export default function Ventas() {
   const [entrega, setEntrega] = useState(0);
   const [mostrarModalVariable, setMostrarModalVariable] = useState(false);
 const [productoVariableSeleccionado, setProductoVariableSeleccionado] = useState(null);
-const [cantidadVariable, setCantidadVariable] = useState("");
+const [cantidadVariable, setCantidadVariable] = useState(1);
 const [precioVariable, setPrecioVariable] = useState("");
   const [comentario, setComentario] = useState('');
   const [resultados, setResultados] = useState([]);
@@ -19,6 +19,7 @@ const [precioVariable, setPrecioVariable] = useState("");
   const [formaPago, setFormaPago] = useState(1); // por defecto efectivo
   const [historial, setHistorial] = useState([]);
   const { userId } = useContext(AuthContext);
+  const precioInputRef = useRef(null);
 
 // Función para abrir el modal desde tu agregarProducto
 const abrirModalVariable = (producto) => {
@@ -50,6 +51,16 @@ const confirmarVariable = () => {
   setCantidadVariable("");
   setPrecioVariable("");
 };
+
+useEffect(() => {
+  if (mostrarModalVariable) {
+    // pequeño delay para asegurar render
+    setTimeout(() => {
+      precioInputRef.current?.focus();
+      precioInputRef.current?.select(); // opcional: selecciona el valor
+    }, 0);
+  }
+}, [mostrarModalVariable]);
 
 const cargarHistorial = async () => {
   const r = await api.get("/Ventas/Historial");
@@ -547,7 +558,11 @@ const cambiarCantidad = (id, nuevaCantidad) => {
           step="0.01"
           value={precioVariable}
           onChange={e => setPrecioVariable(e.target.value)}
+          ref={precioInputRef}
           style={{ width: "100%", padding: 5, marginTop: 5 }}
+          onKeyDown={e => {
+            if (e.key === "Enter") confirmarVariable();
+          }}
         />
       </label>
 
@@ -558,7 +573,7 @@ const cambiarCantidad = (id, nuevaCantidad) => {
             setCantidadVariable("");
             setPrecioVariable("");
           }}
-          style={{ padding: 10, borderRadius: 5, border: "none", background: "#ccc", cursor: "pointer" }}
+          style={{ padding: 10, borderRadius: 5, border: "none", background: "#522222ff", cursor: "pointer" }}
         >
           Cancelar
         </button>
