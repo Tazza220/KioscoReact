@@ -25,32 +25,34 @@ const [precioVariable, setPrecioVariable] = useState("");
 const abrirModalVariable = (producto) => {
   setProductoVariableSeleccionado(producto);
   setCantidadVariable(1);        // valor inicial de cantidad
-  setPrecioVariable(producto.precio); // valor inicial del precio vigente
+  setPrecioVariable(""); // valor inicial del precio vigente
   setMostrarModalVariable(true);
 };
 
 // Función para confirmar y agregar al carrito
 const confirmarVariable = () => {
-  if (!cantidadVariable || !precioVariable) return alert("Ingrese cantidad y precio");
+  if (!cantidadVariable || !precioVariable) {
+    alert("Ingrese cantidad y precio");
+    return;
+  }
 
-  setCarrito(prev => {
-    const existe = prev.find(p => p.id === productoVariableSeleccionado.id);
-    if (existe) {
-      return prev.map(p =>
-        p.id === productoVariableSeleccionado.id
-          ? { ...p, cantidad: p.cantidad + parseFloat(cantidadVariable), precio: parseFloat(precioVariable) }
-          : p
-      );
+  setCarrito(prev => [
+    ...prev,
+    {
+      ...productoVariableSeleccionado,
+      cantidad: parseFloat(cantidadVariable),
+      precio: parseFloat(precioVariable),
+      _lineId: crypto.randomUUID(), // 👈 clave única de línea
+      esVariable: true
     }
-    return [...prev, { ...productoVariableSeleccionado, cantidad: parseFloat(cantidadVariable), precio: parseFloat(precioVariable) }];
-  });
+  ]);
 
-  // Reset modal
   setMostrarModalVariable(false);
   setProductoVariableSeleccionado(null);
-  setCantidadVariable("");
+  setCantidadVariable(1);
   setPrecioVariable("");
 };
+
 
 useEffect(() => {
   if (mostrarModalVariable) {
@@ -105,27 +107,11 @@ const imprimirTicket = (id) => {
 
   // Si el producto es variable
   if (p.precioVariable) {
-    setProductoVariableSeleccionado(p);
-    setMostrarModalVariable(true);
-    return;
-  }
+  abrirModalVariable(p);
+  return;
+}
 
-  const confirmarVariable = () => {
-  setCarrito(prev => [
-    ...prev,
-    {
-      ...productoVariableSeleccionado,
-      cantidad: parseFloat(cantidadVariable),
-      precio: parseFloat(precioVariable)
-    }
-  ]);
-
-  setMostrarModalVariable(false);
-  setCantidadVariable("");
-  setPrecioVariable("");
-  setCodigo("");
-  setResultados([]);
-};
+  
 
   // Producto normal: cantidad +1
   setCarrito(prev => {
@@ -241,8 +227,13 @@ const colgroupH = (
     <col style={{ width: "8%" }} />
   </colgroup>
 );
-const eliminarProducto = (id) => {
-  setCarrito(prev => prev.filter(p => p.id !== id));
+
+const eliminarProducto = (id, lineId) => {
+  setCarrito(prev =>
+    prev.filter(p =>
+      p.esVariable ? p._lineId !== lineId : p.id !== id
+    )
+  );
 };
 
 const cambiarCantidad = (id, nuevaCantidad) => {
@@ -293,7 +284,7 @@ const cambiarCantidad = (id, nuevaCantidad) => {
             {colgroup}
             <tbody>
               {carrito.map(p => (
-                <tr key={p.id}>
+                <tr key={p._lineId ?? p.id}>
                   <td style={styles.td}>{p.nombre}</td>
                   <td style={styles.td}><input
   style={styles.inputCantidad}
@@ -307,7 +298,7 @@ const cambiarCantidad = (id, nuevaCantidad) => {
                   <td style={styles.td}>${p.precio * p.cantidad}</td>
                   <td><button
     style={styles.btnDelete}
-    onClick={() => eliminarProducto(p.id)}
+    onClick={() => eliminarProducto(p.id, p._lineId)}
   >
     <FaDeleteLeft />
   </button></td>
@@ -570,7 +561,7 @@ const cambiarCantidad = (id, nuevaCantidad) => {
         <button
           onClick={() => {
             setMostrarModalVariable(false);
-            setCantidadVariable("");
+            setCantidadVariable(1);
             setPrecioVariable("");
           }}
           style={{ padding: 10, borderRadius: 5, border: "none", background: "#522222ff", cursor: "pointer" }}
