@@ -40,6 +40,20 @@ useEffect(() => {
 }, []);
 
 
+const eliminarVenta = async (id) => {
+  if (!window.confirm("¿Eliminar esta venta?")) return;
+
+  try {
+    await api.delete(`/ventas/${id}`);
+
+    // quitar la fila del historial sin recargar
+    setHistorial(prev => prev.filter(v => v.id !== id));
+  } catch (err) {
+    console.error(err);
+    alert("Error al eliminar la venta");
+  }
+};
+
 
 // Función para abrir el modal desde tu agregarProducto
 const abrirModalVariable = (producto) => {
@@ -463,9 +477,9 @@ if (!cajaEstado?.abierta) {
                 style={{
                   padding: "4px 4px",
                 }}
-                onClick={() => imprimirTicket(v.id)}
+                onClick={() => eliminarVenta(v.id)}
               >
-                <MdPrint size={20} style={{marginTop:2}}/>
+                <FaDeleteLeft size={20} style={{marginTop:2}}/>
               </button>
             </td>
           </tr>

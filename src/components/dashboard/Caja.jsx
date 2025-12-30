@@ -193,7 +193,8 @@ if (caja === false) {
 
           <select value={formaPago} onChange={e => setFormaPago(e.target.value)}>
             <option value="EFECTIVO">Efectivo</option>
-            <option value="TARJETA">Tarjeta</option>
+            <option value="DEBITO">Debito</option>
+            <option value="CREDITO">Credito</option>
             <option value="TRANSFERENCIA">Transferencia</option>
             <option value="OTRO">Otro</option>
           </select>
