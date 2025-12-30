@@ -8,6 +8,7 @@ import Usuarios from './dashboard/Usuarios';
 import Reportes from './dashboard/Reportes';
 import Compras from './dashboard/Compras';
 import Stock from './dashboard/Stock';
+import Caja from './dashboard/Caja';
 import { AuthContext } from './../AuthContext';
 
 export default function Dashboard() {
@@ -45,6 +46,7 @@ export default function Dashboard() {
           {role === 'SuperUser' && <Route path="usuarios" element={<Usuarios />} />}
           {role === 'SuperUser' && <Route path="compras" element={<Compras />} />}
           {role === 'SuperUser' && <Route path="stock" element={<Stock />} />}
+          {role === 'SuperUser' && <Route path="Caja" element={<Caja />} />}
 
           {/* Ruta fallback */}
           <Route path="*" element={<div>Seleccione una opción del menú</div>} />

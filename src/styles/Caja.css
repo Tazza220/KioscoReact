@@ -1,0 +1,112 @@
+.caja-layout {
+  display: flex;
+  gap: 8px;
+  align-items: stretch; /* 👈 misma altura */
+}
+
+.caja-left,
+.caja-right {
+  flex: 1;               /* 👈 50% cada una */
+  background: #fafafa;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.06);
+}
+
+.caja-right .tabla {
+  width: 100%;
+  table-layout: fixed; /* clave para que respete el ancho */
+}
+.caja-right .tabla th,
+.caja-right .tabla td {
+  padding: 4px 4px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.caja-right .tabla th:nth-child(4),
+.caja-right .tabla td:nth-child(4) {
+  width: 25%;
+  white-space: normal;
+}
+
+.movimientos-wrapper {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.fila-movimiento {
+  display: grid;
+  grid-template-columns: 85px 130px 100px 150px auto;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+/* Inputs y selects */
+.fila-movimiento input,
+.fila-movimiento select {
+  height: 40px;
+  padding: 0 8px;
+  border-radius: 8px;
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+/* Focus elegante */
+.fila-movimiento input:focus,
+.fila-movimiento select:focus {
+  outline: none;
+  border-color: #4f46e5;          /* azul moderno */
+  box-shadow: 0 0 0 2px rgba(79,70,229,0.15);
+}
+
+/* Placeholder más suave */
+.fila-movimiento input::placeholder {
+  color: #999;
+}
+
+/* Botón */
+.fila-movimiento button {
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: none;
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.fila-movimiento button:hover {
+  background: #4338ca;
+}
+
+.fila-movimiento button:active {
+  transform: scale(0.97);
+}
+
+.fila-movimiento button:disabled {
+  background: #a5b4fc;
+  cursor: not-allowed;
+}
+
+
+/* Responsive */
+@media (max-width: 900px) {
+  .caja-layout {
+    flex-direction: column;
+  }
+
+  .caja-left,
+  .caja-right {
+    width: 100%;
+  }
+}

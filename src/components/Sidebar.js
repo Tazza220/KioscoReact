@@ -7,7 +7,7 @@ export default function Sidebar({ role }) {
 
   if (role === 'Operator') options = ['ventas', 'productos'];
   if (role === 'Manager') options = ['ventas', 'productos', 'proveedores', 'reportes','compras','stock'];
-  if (role === 'SuperUser') options = ['ventas', 'productos', 'proveedores', 'reportes', 'usuarios', 'compras', 'stock'];
+  if (role === 'SuperUser') options = ['ventas', 'caja', 'productos', 'proveedores', 'reportes', 'usuarios', 'compras', 'stock'];
 
   return (
     <div style={{ width: 100, background: '#502c2cff', color: '#ffffffff', padding: 20 }}>

@@ -182,14 +182,13 @@ const imprimirTicket = (id) => {
     try {
       console.log("ID del usuario:", userId);
       await api.post("/Ventas", {
-        
-        total,
         formaPago,
         comentario,
         VendedorId: userId,
         items: carrito.map(c => ({
           productoId: c.id,
-          cantidad: c.cantidad
+          cantidad: c.cantidad,
+          precioUnitario: c.esVariable ? c.precio : null
         }))
       });
 
