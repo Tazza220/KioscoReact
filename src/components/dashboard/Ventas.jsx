@@ -20,6 +20,26 @@ const [precioVariable, setPrecioVariable] = useState("");
   const [historial, setHistorial] = useState([]);
   const { userId } = useContext(AuthContext);
   const precioInputRef = useRef(null);
+  const [cajaEstado, setCajaEstado] = useState(null);
+const [cargandoCaja, setCargandoCaja] = useState(true);
+
+
+useEffect(() => {
+  const cargarEstadoCaja = async () => {
+    try {
+      const r = await api.get("/caja/estado");
+      setCajaEstado(r.data);
+    } catch (err) {
+      console.error("Error obteniendo estado de caja", err);
+    } finally {
+      setCargandoCaja(false);
+    }
+  };
+
+  cargarEstadoCaja();
+}, []);
+
+
 
 // Función para abrir el modal desde tu agregarProducto
 const abrirModalVariable = (producto) => {
@@ -244,6 +264,19 @@ const cambiarCantidad = (id, nuevaCantidad) => {
     )
   );
 };
+
+if (cargandoCaja) {
+  return <div>Cargando estado de caja...</div>;
+}
+
+if (!cajaEstado?.abierta) {
+  return (
+    <div style={{ padding: 40 }}>
+      <h2>🚫 Caja cerrada</h2>
+      <p>Debe abrir una caja para poder registrar ventas.</p>
+    </div>
+  );
+}
 
   return (
 
