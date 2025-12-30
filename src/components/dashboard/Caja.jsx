@@ -5,7 +5,9 @@ import { FaPlusCircle, FaMinusCircle, FaLock } from "react-icons/fa";
 import "../../styles.css";
 import "../../styles/Caja.css"; // 👈 último import
 
-export default function Caja() {
+
+
+export default function Caja({ recargarCajaEstado }) {
   const { userId } = useContext(AuthContext);
 
   const [caja, setCaja] = useState(null);
@@ -31,7 +33,8 @@ export default function Caja() {
 const abrirCaja = async () => {
   try {
     await api.post("/caja/abrir", { usuarioId: userId });
-    cargarCaja();
+    await cargarCaja();
+    recargarCajaEstado();
   } catch {
     alert("Error al abrir caja");
   }
@@ -77,7 +80,8 @@ const abrirCaja = async () => {
     try {
       await api.post("/caja/cerrar", { usuarioId: userId });
       alert("Caja cerrada correctamente");
-      cargarCaja();
+      await cargarCaja();
+      recargarCajaEstado();
     } catch {
       alert("Error al cerrar caja");
     }

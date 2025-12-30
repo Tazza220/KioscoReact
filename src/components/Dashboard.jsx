@@ -16,11 +16,18 @@ export default function Dashboard() {
   const { role } = useContext(AuthContext);
   const [cajaEstado, setCajaEstado] = useState(null);
 
-  useEffect(() => {
-    api.get("caja/estado")
-      .then(r => setCajaEstado(r.data))
-      .catch(() => setCajaEstado({ abierta: false }));
-  }, []);
+  const cargarEstadoCaja = async () => {
+  try {
+    const r = await api.get("caja/estado");
+    setCajaEstado(r.data);
+  } catch {
+    setCajaEstado({ abierta: false });
+  }
+};
+
+useEffect(() => {
+  cargarEstadoCaja();
+}, []);
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
@@ -28,6 +35,10 @@ export default function Dashboard() {
 
       <div style={{ flex: 1, padding: 5, background: '#bcbfc0ff' }}>
         <Routes>
+          <Route
+            path="caja"
+            element={<Caja recargarCajaEstado={cargarEstadoCaja} />}
+          />
 
           <Route
             path=""
