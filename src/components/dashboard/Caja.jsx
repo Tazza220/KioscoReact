@@ -94,7 +94,7 @@ const abrirCaja = async () => {
   return <p>Cargando caja...</p>;
 }
 
-const totalOtrosPagos = caja.resumenPorFormaPago
+const totalOtrosPagos = (caja?.resumenPorFormaPago ?? [])
   .filter(r => ["Debito", "Credito", "Transferencia"].includes(r.formaPago))
   .reduce((acc, r) => acc + Number(r.saldo), 0);
 

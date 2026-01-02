@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
+import api from "../../axiosConfig";
+import "../../styles/HistorialCajas.css";
 
 // Componentes
-import CajaList from "./CajaList";
-import CajaResumen from "./CajaResumen";
-import CajaTabs from "./CajaTabs";
-import CajaMovimientos from "./CajaMovimientos";
-import CajaVentas from "./CajaVentas";
-import VentaDetalle from "./VentaDetalle";
+import CajaList from "./HistorialCajas/CajaList";
+import CajaResumen from "./HistorialCajas/CajaResumen";
+import CajaTabs from "./HistorialCajas/CajaTabs";
+import VentaDetalle from "./HistorialCajas/VentaDetalle";
 
 export default function HistorialCajas() {
   const [cajas, setCajas] = useState([]);
   const [cajaSeleccionada, setCajaSeleccionada] = useState(null);
-  const [tabActiva, setTabActiva] = useState("movimientos");
+  const [tab, setTab] = useState("MOVIMIENTOS");
   const [ventaSeleccionada, setVentaSeleccionada] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -19,15 +19,12 @@ export default function HistorialCajas() {
      CARGA INICIAL DE CAJAS
   ========================== */
   useEffect(() => {
-    async function fetchCajas() {
+    async function cargarCajas() {
       try {
         setLoading(true);
-        const res = await fetch("/api/cajas");
-        const data = await res.json();
-
+        const { data } = await api.get("/caja");
         setCajas(data);
 
-        // Seleccionar la primera por defecto
         if (data.length > 0) {
           seleccionarCaja(data[0]);
         }
@@ -38,7 +35,7 @@ export default function HistorialCajas() {
       }
     }
 
-    fetchCajas();
+    cargarCajas();
   }, []);
 
   /* ==========================
@@ -49,11 +46,11 @@ export default function HistorialCajas() {
       setLoading(true);
       setVentaSeleccionada(null);
 
-      const res = await fetch(`/api/cajas/${caja.id}`);
-      const detalle = await res.json();
+      const { data } = await api.get(`/caja/${caja.id}/resumen`);
 
-      setCajaSeleccionada(detalle);
-      setTabActiva("movimientos");
+      setCajaSeleccionada(data);
+      setTab("MOVIMIENTOS");
+
     } catch (err) {
       console.error("Error cargando detalle de caja", err);
     } finally {
@@ -67,10 +64,8 @@ export default function HistorialCajas() {
   async function seleccionarVenta(venta) {
     try {
       setLoading(true);
-      const res = await fetch(`/api/ventas/${venta.id}`);
-      const detalle = await res.json();
-
-      setVentaSeleccionada(detalle);
+      const { data } = await api.get(`/ventas/${venta.id}/detalle`);
+      setVentaSeleccionada(data);
     } catch (err) {
       console.error("Error cargando detalle de venta", err);
     } finally {
@@ -80,45 +75,41 @@ export default function HistorialCajas() {
 
   return (
     <div className="historial-cajas-container">
-      {/* COLUMNA IZQUIERDA */}
+      
+      {/* ============ COLUMNA IZQUIERDA ============ */}
       <aside className="historial-cajas-sidebar">
         <h2>Historial de Cajas</h2>
 
-        <CajaList
-          cajas={cajas}
-          cajaSeleccionada={cajaSeleccionada}
-          onSelect={seleccionarCaja}
-        />
+        {/* LISTA SCROLLEABLE */}
+        <div className="historial-cajas-lista">
+          <CajaList
+            cajas={cajas}
+            cajaSeleccionada={cajaSeleccionada}
+            onSelect={seleccionarCaja}
+          />
+        </div>
 
+        {/* RESUMEN FIJO */}
         {cajaSeleccionada && (
           <CajaResumen caja={cajaSeleccionada} />
         )}
       </aside>
 
-      {/* COLUMNA DERECHA */}
+      {/* ============ COLUMNA DERECHA ============ */}
       <main className="historial-cajas-content">
         {loading && <p>Cargando...</p>}
 
         {!loading && cajaSeleccionada && (
           <>
             <CajaTabs
-              tabActiva={tabActiva}
-              onChange={setTabActiva}
+              caja={cajaSeleccionada}
+              movimientos={cajaSeleccionada.movimientos}
+              ventas={cajaSeleccionada.ventas}
+              ventaSeleccionadaId={ventaSeleccionada?.id??0}
+              tab={tab}
+              setTab={setTab}
+              onSelectVenta={seleccionarVenta}
             />
-
-            {tabActiva === "movimientos" && (
-              <CajaMovimientos
-                movimientos={cajaSeleccionada.movimientos}
-              />
-            )}
-
-            {tabActiva === "ventas" && (
-              <CajaVentas
-                ventas={cajaSeleccionada.ventas}
-                ventaSeleccionada={ventaSeleccionada}
-                onSelectVenta={seleccionarVenta}
-              />
-            )}
 
             {ventaSeleccionada && (
               <VentaDetalle venta={ventaSeleccionada} />

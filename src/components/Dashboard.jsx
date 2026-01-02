@@ -9,6 +9,7 @@ import Reportes from './dashboard/Reportes';
 import Compras from './dashboard/Compras';
 import Stock from './dashboard/Stock';
 import Caja from './dashboard/Caja';
+import HistorialCajas from './dashboard/HistorialCajas';
 import api from "../axiosConfig";
 import { AuthContext } from '../AuthContext';
 
@@ -68,6 +69,7 @@ useEffect(() => {
               <Route path="compras" element={<Compras />} />
               <Route path="stock" element={<Stock />} />
               <Route path="caja" element={<Caja />} />
+              <Route path="historial cajas" element={<HistorialCajas />} />
             </>
           )}
 

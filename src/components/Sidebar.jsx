@@ -7,7 +7,7 @@ export default function Sidebar({ role, cajaEstado }) {
 
   if (role === 'Operator') options = ['ventas', 'productos'];
   if (role === 'Manager') options = ['ventas', 'productos', 'proveedores', 'reportes', 'compras', 'stock'];
-  if (role === 'SuperUser') options = ['ventas', 'caja', 'productos', 'proveedores', 'reportes', 'usuarios', 'compras', 'stock'];
+  if (role === 'SuperUser') options = ['ventas', 'caja', 'historial cajas', 'productos', 'proveedores', 'reportes', 'usuarios', 'compras', 'stock'];
 
   const cajaAbierta = cajaEstado?.abierta === true;
 
