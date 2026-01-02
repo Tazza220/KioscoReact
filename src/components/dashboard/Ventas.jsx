@@ -454,7 +454,7 @@ if (!cajaEstado?.abierta) {
             </td>
 
             <td style={styles.tdSmall}>
-              {formasPago.find(fp => fp.id === Number(v.formaPago))?.nombre ?? "N/A"}
+              {v.formaPago}
             </td>
 
             <td style={styles.tdSmall}>

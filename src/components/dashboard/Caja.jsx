@@ -17,6 +17,9 @@ export default function Caja({ recargarCajaEstado }) {
   const [cargando, setCargando] = useState(false);
   const [formaPago, setFormaPago] = useState("EFECTIVO");
 
+
+  
+
   const cargarCaja = async () => {
   try {
     const r = await api.get("/caja/actual");
@@ -91,6 +94,10 @@ const abrirCaja = async () => {
   return <p>Cargando caja...</p>;
 }
 
+const totalOtrosPagos = caja.resumenPorFormaPago
+  .filter(r => ["Debito", "Credito", "Transferencia"].includes(r.formaPago))
+  .reduce((acc, r) => acc + Number(r.saldo), 0);
+
 if (caja === false) {
   return (
     <div className="contenedor">
@@ -144,11 +151,12 @@ if (caja === false) {
         <table className="tabla">
           <thead>
             <tr>
-              <th>Forma de pago</th>
+              <th>F. de pago</th>
               <th>Ventas</th>
               <th>Ingresos</th>
               <th>Egresos</th>
               <th>Saldo</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -160,6 +168,16 @@ if (caja === false) {
                 <td className="rojo">${r.egresos.toFixed(2)}</td>
                 <td>
                   <strong>${r.saldo.toFixed(2)}</strong>
+                </td>
+                <td>
+                  <strong>
+                  {r.formaPago === "Debito"
+                    ? "⤵"
+                    : r.formaPago === "Transferencia"
+                      ? "⤴"
+                      : r.formaPago ==="Credito"
+                      ? "➜ $"+totalOtrosPagos.toFixed(2):""
+                  }</strong>
                 </td>
               </tr>
             ))}
@@ -195,7 +213,7 @@ if (caja === false) {
             <option value="EFECTIVO">Efectivo</option>
             <option value="DEBITO">Debito</option>
             <option value="CREDITO">Credito</option>
-            <option value="TRANSFERENCIA">Transferencia</option>
+            <option value="TRANSFERENCIA">Transf.</option>
             <option value="OTRO">Otro</option>
           </select>
 
@@ -224,7 +242,7 @@ if (caja === false) {
           <thead>
             <tr>
               <th>Tipo</th>
-              <th>Forma pago</th>
+              <th>F. de pago</th>
               <th>Monto</th>
               <th>Concepto</th>
               <th>Hora</th>

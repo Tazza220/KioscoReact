@@ -39,7 +39,7 @@
 
 .fila-movimiento {
   display: grid;
-  grid-template-columns: 85px 130px 100px 150px auto;
+  grid-template-columns: 85px 90px 100px 150px auto;
   gap: 4px;
   margin-bottom: 10px;
 }
