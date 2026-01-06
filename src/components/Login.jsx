@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from "../axiosConfig";
 import { AuthContext } from '../AuthContext';
@@ -6,6 +6,7 @@ import logo2 from './../logo2.svg';
 import { Link } from 'react-router-dom';
 
 export default function Login() {
+  const [logoSvg, setLogoSvg] = useState(null);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const { setToken, setRole } = useContext(AuthContext);
@@ -29,12 +30,36 @@ export default function Login() {
     // Manejo de errores
     alert(err.response?.data?.message || 'Error en login');
   }
+
+   
 };
+
+useEffect(() => {
+    async function fetchLogo() {
+      try {
+        const { data } = await api.get("/config/branding");
+        console.log("Respuesta branding:", data);
+
+        // Solo usar el logo si enable es true y logoSvg existe
+        if (data.enabled) {
+          setLogoSvg(data.logoSvg);
+        }
+      } catch (err) {
+        console.warn("No se pudo obtener el logo, usando por defecto", err);
+      }
+    }
+
+    fetchLogo();
+  }, []);
 
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <img src={logo2} alt="Logo" style={styles.logo} />
+        {/* mostrar SVG recibido o logo por defecto */}
+        {logoSvg
+          ? <div dangerouslySetInnerHTML={{ __html: logoSvg }} style={styles.logo} />
+          : <img src={logo2} alt="Logo" style={styles.logo} />
+        }
         <h2>Iniciar sesión</h2>
         <form onSubmit={handleSubmit} style={styles.form}>
           <input type="text" placeholder="Usuario" value={username} onChange={e => setUsername(e.target.value)} style={styles.input} required />
