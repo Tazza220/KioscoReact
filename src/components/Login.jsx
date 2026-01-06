@@ -57,7 +57,7 @@ useEffect(() => {
       <div style={styles.card}>
         {/* mostrar SVG recibido o logo por defecto */}
         {logoSvg
-          ? <div dangerouslySetInnerHTML={{ __html: logoSvg }} style={styles.logo} />
+          ? <div dangerouslySetInnerHTML={{ __html: logoSvg }} style={styles.logosvg} />
           : <img src={logo2} alt="Logo" style={styles.logo} />
         }
         <h2>Iniciar sesión</h2>
@@ -79,6 +79,7 @@ const styles = {
   container: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#f5f0f0ff' },
   card: { width: 350, padding: 30, borderRadius: 10, boxShadow: '0 4px 15px rgba(0,0,0,0.2)', background: '#fff', textAlign: 'center' },
   logo: { width: 200, },
+  logosvg: { width: 350, },
   form: { display: 'flex', flexDirection: 'column' },
   input: { marginBottom: 15, padding: 10, borderRadius: 5, border: '1px solid #ccc', fontSize: 16, "background-color": '#fff8d3ff' },
   button: { padding: 10, borderRadius: 5, border: 'none', background: '#ff0000ff', color: '#fff', fontSize: 16, cursor: 'pointer' },
