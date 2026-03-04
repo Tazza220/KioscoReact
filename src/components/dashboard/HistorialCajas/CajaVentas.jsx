@@ -2,7 +2,8 @@ export default function CajaVentas({
   
   ventas = [],
   ventaSeleccionadaId,
-  onSelectVenta
+  onSelectVenta,
+  onFacturaChange
 }) {
   if (!ventas || ventas.length === 0) {
     return (
@@ -21,6 +22,7 @@ export default function CajaVentas({
             <th>Total</th>
             <th>Forma pago</th>
             <th>Comentario</th>
+            <th>Factura</th>
           </tr>
         </thead>
 
@@ -55,6 +57,18 @@ export default function CajaVentas({
 
                 <td style={styles.comentario}>
                   {v.comentario || "—"}
+                </td>
+
+                <td>
+                  <input
+                    type="text"
+                    defaultValue={v.factura || ""}
+                    placeholder="001-0000001"
+                    style={styles.facturaInput}
+                    onClick={(e) => e.stopPropagation()}
+                    onKeyDown={(e) => e.stopPropagation()}
+                    onBlur={(e) => onFacturaChange?.(v.id, e.target.value)}
+                  />
                 </td>
               </tr>
             );

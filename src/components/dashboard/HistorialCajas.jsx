@@ -73,6 +73,32 @@ export default function HistorialCajas() {
     }
   }
 
+  async function actualizarFactura(ventaId, factura) {
+  try {
+    // opcional: validar formato rápido
+    const f = (factura || "").trim();
+    setLoading(true);
+
+    await api.put(`/ventas/${ventaId}/factura`, { factura: f });
+
+    // refrescar la caja seleccionada para que la tabla muestre el cambio
+    if (cajaSeleccionada?.id) {
+      const { data } = await api.get(`/caja/${cajaSeleccionada.id}/resumen`);
+      setCajaSeleccionada(data);
+    }
+
+    // si la venta seleccionada es esa, actualizá también el detalle en pantalla
+    if (ventaSeleccionada?.id === ventaId) {
+      const { data } = await api.get(`/ventas/${ventaId}/detalle`);
+      setVentaSeleccionada(data);
+    }
+  } catch (err) {
+    console.error("Error actualizando factura", err);
+  } finally {
+    setLoading(false);
+  }
+}
+
   return (
     <div className="historial-cajas-container">
       
@@ -109,6 +135,7 @@ export default function HistorialCajas() {
               tab={tab}
               setTab={setTab}
               onSelectVenta={seleccionarVenta}
+              onFacturaChange={actualizarFactura}
             />
 
             {ventaSeleccionada && (

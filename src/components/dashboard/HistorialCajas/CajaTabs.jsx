@@ -5,7 +5,8 @@ export default function CajaTabs({
   tab,
   setTab,
   ventaSeleccionadaId=0,
-  onSelectVenta
+  onSelectVenta,
+  onFacturaChange
 }) {
   if (!caja) {
     return (
@@ -45,6 +46,7 @@ export default function CajaTabs({
             ventas={ventas}
             onSelectVenta={onSelectVenta}
             ventaSeleccionadaId={ventaSeleccionadaId}
+            onFacturaChange={onFacturaChange}
           />
         )}
       </div>
@@ -113,7 +115,7 @@ function Movimientos({ movimientos }) {
   );
 }
 
-function Ventas({ ventas, onSelectVenta, ventaSeleccionadaId }) {
+function Ventas({ ventas, onSelectVenta, ventaSeleccionadaId, onFacturaChange }) {
   if (!ventas || ventas.length === 0) {
     return <p style={{ opacity: 0.6 }}>Sin ventas</p>;
   }
@@ -125,6 +127,7 @@ function Ventas({ ventas, onSelectVenta, ventaSeleccionadaId }) {
           <th>Hora</th>
           <th>Total</th>
           <th>Forma pago</th>
+          <th>Factura</th>
         </tr>
       </thead>
       <tbody>
@@ -145,6 +148,17 @@ function Ventas({ ventas, onSelectVenta, ventaSeleccionadaId }) {
             </td>
             <td>${Number(v.total).toFixed(2)}</td>
             <td>{v.formaPago}</td>
+            <td>
+              <input
+                type="text"
+                defaultValue={v.factura || ""}
+                placeholder="0001-00000001"
+                style={styles.facturaInput}
+                onClick={(e) => e.stopPropagation()}
+                onKeyDown={(e) => e.stopPropagation()}
+                onBlur={(e) => onFacturaChange?.(v.id, e.target.value)}
+              />
+            </td>
           </tr>);
 })}
       </tbody>
@@ -199,4 +213,11 @@ const styles = {
   rowSelected: {
     background: "#ff8181ff"
   },
+  facturaInput: {
+  width: 120,
+  padding: "3px 6px",
+  fontSize: 13,
+  border: "1px solid #ccc",
+  borderRadius: 6
+}
 };
