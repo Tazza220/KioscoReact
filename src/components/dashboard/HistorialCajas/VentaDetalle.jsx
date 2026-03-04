@@ -32,6 +32,7 @@ export default function VentaDetalle({ venta }) {
       <table style={styles.table}>
         <thead>
           <tr>
+            <th>Id</th>
             <th>Producto</th>
             <th>Cant.</th>
             <th>Precio</th>
@@ -42,6 +43,7 @@ export default function VentaDetalle({ venta }) {
         <tbody>
           {venta.items?.map(i => (
             <tr key={i.id}>
+              <td>{i.productoId}</td>
               <td>{i.nombre || "Producto eliminado"}</td>
               <td>{i.cantidad}</td>
               <td>${Number(i.precioUnitario).toFixed(2)}</td>
