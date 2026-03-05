@@ -114,8 +114,13 @@ const guardarComentario = async (id) => {
   await api.put(`/ventas/${id}/comentario`, { comentario: venta.comentario??"" });
 };
 
-const imprimirTicket = (id) => {
-  window.open(`/api/ventas/${id}/ticket`, "_blank");
+const imprimirTicket = async (id) => {
+  try {
+    await api.post("/print/venta", { ventaId: id });
+  } catch (err) {
+    console.error(err);
+    alert("Error al imprimir");
+  }
 };
   // 🔍 Buscar productos por nombre o código mientras se escribe
   const buscarProducto = async (texto) => {
@@ -253,11 +258,12 @@ const imprimirTicket = (id) => {
 
 const colgroupH = (
   <colgroup>
-    <col style={{ width: "25%" }} />
-    <col style={{ width: "15%" }} />
-    <col style={{ width: "20%" }} />
-    <col style={{ width: "32%" }} />
-    <col style={{ width: "8%" }} />
+    <col style={{ width: "6%" }} />   {/* imprimir */}
+    <col style={{ width: "22%" }} />  {/* fecha */}
+    <col style={{ width: "15%" }} />  {/* total */}
+    <col style={{ width: "17%" }} />  {/* pago */}
+    <col style={{ width: "32%" }} />  {/* comentario */}
+    <col style={{ width: "8%" }} />   {/* eliminar */}
   </colgroup>
 );
 
@@ -421,6 +427,7 @@ if (!cajaEstado?.abierta) {
       {colgroupH}
       <thead>
         <tr>
+          <th style={styles.thSmall}></th> {/* imprimir */}
           <th style={{...styles.thSmall, width:100}}>Fecha y Hora</th>
           <th style={styles.thSmall}>Total</th>
           <th style={styles.thSmall}>Pago</th>
@@ -439,6 +446,19 @@ if (!cajaEstado?.abierta) {
       <tbody>
         {historial.map(v => (
           <tr key={v.id}>
+            <td style={styles.tdSmall}>
+              <button
+                title="Imprimir"
+                style={styles.btnIcon}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  imprimirTicket(v.id);
+                }}
+              >
+                <MdPrint size={20} style={{ marginTop: 2 }} />
+              </button>
+            </td>
             <td style={styles.tdSmall}>
               {new Date(v.fecha).toLocaleString("es-AR", {
                 day: "2-digit",
@@ -650,6 +670,12 @@ const option = {
 };
 
 const styles = {
+
+  btnIcon: {
+  padding: "4px 4px",
+  borderRadius: 6,
+  cursor: "pointer"
+},
   btnDelete:{color:"#fff",
     padding:"5px 5px 2px 5px",
   },
